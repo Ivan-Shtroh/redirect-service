@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  sls:
+    image: 'shortlinks-service:latest'
+    build:
+      context: .
+    container_name: sls_container
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://sls_container:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=pgadmin
+      - SPRING_DATASOURCE_PASSWORD=somepasword
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+  redirect:
+    image: 'redirect-service:latest'
+    build:
+      context: .
+    container_name: sls_container
+    ports:
+      - "8081:8081"
+  db:
+    image: 'postgres:latest'
+    container_name: sls_container
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=pgadmin
+      - POSTGRES_PASSWORD=somepasword
+      - POSTGRES_DB=postgres
